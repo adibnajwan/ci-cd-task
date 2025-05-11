@@ -1,0 +1,29 @@
+name: PHP CI Pipeline
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+
+      - name: Install dependencies
+        run: |
+          if [ -f composer.json ]; then
+            composer install --no-interaction --prefer-dist
+          else
+            echo "No composer.json found, skipping deps"
+          fi
+
+      - name: Run PHP script
+        run: php index.php
